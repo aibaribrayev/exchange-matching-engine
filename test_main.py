@@ -172,5 +172,20 @@ class TestTrades(ExchangeTest):
         self.assertEqual(trades[1].buy_order_id, dan)
 
 
+
+class TestMostTraded(ExchangeTest):
+
+    def test_lists_the_busiest_stocks_first(self):
+        self.sell("alice", 10, "100", stock="MSFT")
+        self.buy("bob", 10, "101", stock="MSFT")
+        self.sell("carol", 10, "100", stock="MSFT")
+        self.buy("dan", 10, "101", stock="MSFT")
+        self.sell("eve", 10, "100")
+        self.buy("frank", 10, "101")
+
+        self.assertEqual(self.exchange.most_traded(2), ["MSFT", "AAPL"])
+        self.assertEqual(self.exchange.most_traded(1), ["MSFT"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -240,6 +240,15 @@ class Exchange:
         """Every trade in a stock, in the order they happened."""
         return self._find_book(symbol).trades()
 
+    def most_traded(self, n: int) -> list[str]:
+        """The n stocks with the most shares traded, busiest first."""
+        volumes = {}
+        for symbol, book in self._books.items():
+            volumes[symbol] = len(book._trades)
+
+        ranked = sorted(volumes, key=lambda symbol: volumes[symbol], reverse=True)
+        return ranked[:n]
+
     def _find_book(self, symbol: str) -> OrderBook:
         book = self._books.get(symbol)
         if book is None:
